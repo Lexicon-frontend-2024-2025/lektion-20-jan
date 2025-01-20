@@ -1,32 +1,39 @@
-const API_URL = "https://majazocom.github.io/Data/books.json";
+const API_URL = "https://majazocom.github.io/Data/games.json";
 
-fetch(API_URL) // fetch körs direkt
-.then( // den här koden körs när servern svarar
-    (res) => res.json() // ett promise, gör om svaret till ett objekt
-) 
-.then((books) => // data till objekt
-    console.log(books)
-)
-.catch(
-    (error) => console.error(error) // det här körs om något blir fel
-)
-
-// kod efteråt kommer att köras direkt efter fetch och innan servern hinner svara
-console.log("Hej från koden");
-
-// vi testar async await
-
-const fetchBooks = async () => { // vi deklarerar funktionen fetchBooks som asynkron, för att kunna använda oss av await sen
+// hämta spelen från API:et
+const fetchGames = async () => {
     try {
         const response = await fetch(API_URL);
         if (!response.ok) {
-            throw new Error(`HTTP-fel! Statuskod ${response.status}`);
+            throw new Error(`HTTP error! Status code: ${response.status}`);
         }
-        const books = await response.json();
-        console.log(books);
+        const data = await response.json();
+        renderGamesToUI(data)
     } catch (error) {
-        console.error('Felet är:', error);
+        console.error('An error occured:', error);
     }
-}
+};
 
-fetchBooks();
+fetchGames();
+
+const renderGamesToUI = (games) => {
+    console.log(games);
+    // nu vill jag rendera ett spel i taget till min html
+    const gamesContainerEl = document.getElementById("games-container");
+    games.forEach(game => {
+        console.log(game);
+        // skapa ett nytt element för vårt spel
+        const gameContainerEl = document.createElement('article');
+        // i min gamecontainerel vill jag ha en bild och en text
+        const gameImg = document.createElement('img');
+        gameImg.src = game.url;
+        gameImg.alt = `${game.title} cover`;
+        gameContainerEl.appendChild(gameImg);
+        // titel-elementet
+        const gameTitleEl = document.createElement("h2");
+        gameTitleEl.innerText = game.title;
+        gameContainerEl.appendChild(gameTitleEl);
+        // nu lägger vi in det nya elementet i vår befintliga HTML
+        gamesContainerEl.appendChild(gameContainerEl);
+    });
+};
