@@ -24,9 +24,31 @@ const fetchBooks = async () => { // vi deklarerar funktionen fetchBooks som asyn
         }
         const books = await response.json();
         console.log(books);
+        // jag vill spara books till LS
+        localStorage.setItem("books", JSON.stringify(books));
     } catch (error) {
         console.error('Felet är:', error);
     }
 }
 
 fetchBooks();
+
+localStorage.setItem("name", "Maja");
+localStorage.setItem("date", "20 januari");
+
+// koppla knappen till funktionen här
+const bookBtnEl = document.getElementById('check-books');
+bookBtnEl.addEventListener("click", () => {
+    // kolla om det finns böcker i local storage
+    const booksFromLS = localStorage.getItem("books");
+
+    console.log(JSON.parse(booksFromLS));
+});
+
+const clearBooksBtnEl = document.getElementById('clear-books');
+clearBooksBtnEl.addEventListener("click", () => {
+    localStorage.removeItem("books");
+    localStorage.clear();
+    let a = localStorage.key(3);
+    console.log(a);
+})
